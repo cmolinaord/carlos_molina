@@ -3,15 +3,16 @@
 #include <stdbool.h>
 
 // Define tamanio mundo
-#define W_SIZE_X 10
-#define W_SIZE_Y 10
+#define W_SIZE_X 20
+#define W_SIZE_Y 20
+// Las primeras y ultmas columnas/filas son parte del borde y no juegan
 
-void world_init(bool world_1[W_SIZE_X][W_SIZE_Y]);
+void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
 void world_print(bool world_1[W_SIZE_X][W_SIZE_Y]);
-void world_step(/* Recibo dos mundos */);
-int world_count_neighbors(/* Recibo un mundo y unas coordenadas */);
-bool world_get_cell(/* Recibo un mundo y unas coordenadas */);
-void world_copy(/* Recibo dos mundos */);
+void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
+int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j);
+bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j);
+void world_copy(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
 
 int main()
 {
@@ -20,18 +21,18 @@ int main()
 	bool world_1[W_SIZE_X][W_SIZE_Y];
 	bool world_2[W_SIZE_X][W_SIZE_Y];
 
-	world_init(world_1);
+	world_init(world_1, world_2);
 
 	do {
 		printf("\033cIteration %d\n", i++);
 		world_print(world_1);
-		// TODO: Itera
+		world_step(world_1, world_2);
 	} while (getchar() != 'q');
 
 	return EXIT_SUCCESS;
 }
 
-void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
+void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
 {
 	// Inicializar mundo a fase
 	for (int i=0; i<W_SIZE_X; i++)
@@ -39,6 +40,7 @@ void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
 		for (int j=0; j<W_SIZE_Y; j++)
 		{
 			world_1[i][j]=false;
+			world_2[i][j]=false;
 		}
 	}
 
@@ -47,59 +49,87 @@ void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
 	*           . . #
 	*           # # #
 	*/
-	world_1[0][1]=true;
 	world_1[1][2]=true;
-	world_1[2][0]=true;
-	world_1[2][1]=true;
-	world_1[2][2]=true;
+	world_1[2][3]=true;
+	world_1[3][1]=true;
+	world_1[3][2]=true;
+	world_1[3][3]=true;
 
 }
 
 void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
 {
-	printf("Imprimir\n");
-	// Imprimir mundo
+	// Imprimir solo las coordenadas activas
 	for (int i=0; i<W_SIZE_X; i++)
 	{
 		for (int j=0; j<W_SIZE_Y; j++)
 		{
-			if (world_1[i][j])
+			if (world_1[i][j] == true)
 				printf("# ");
 			else
-				printf(". ");
+				printf("· ");
 		}
-		printf("\n");
+		printf("\n",i);
 	}
 }
 
-void world_step(/* Recibo dos mundos */)
+void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
 {
-	/*
-	 * TODO:
-	 * - Recorrer el mundo célula por célula comprobando si nace, sobrevive
-	 *   o muere.
-	 *
-	 * - No se puede cambiar el estado del mundo a la vez que se recorre:
-	 *   Usar un mundo auxiliar para guardar el siguiente estado.
-	 *
-	 * - Copiar el mundo auxiliar sobre el mundo principal
-	 */
+	for (int i=1; i<W_SIZE_X-1; i++)
+	{
+		for (int j=1; j<W_SIZE_Y-1; j++)
+		{
+			int neighbors=world_count_neighbors(world_1, i, j);
+			if (!world_get_cell(world_1, i, j)) // Si esta muerta
+			{
+				if (neighbors == 3)
+					world_2[i][j]=true;
+				else
+					world_2[i][j]=false;
+			}
+			else // Si esta viva
+			{
+				if (neighbors == 2 || neighbors == 3)
+					world_2[i][j]=true;
+				else
+					world_2[i][j]=false;
+			}
+		}
+	}
+	// Copiar el mundo auxiliar sobre el antiguo
+	world_copy(world_1, world_2);
 }
 
-int world_count_neighbors(/* Recibo un mundo y unas coordenadas */)
+int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
-	// Devuelve el número de vecinos
+	int count=0;
+	for (int a=i-1; a<=i+1; a++)
+	{
+		for (int b=j-1; b<=j+1; b++)
+		{
+			if (world_get_cell(world_1, a, b))
+				count++;
+		}
+	}
+	// No contar la propia celda analizada
+	if (world_get_cell(world_1, i, j))
+		count--;
+
+	return count;
 }
 
-bool world_get_cell(/* Recibo un mundo y unas coordenadas */)
+bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
-	/*
-	 * TODO: Devuelve el estado de la célula de posición indicada
-	 * (¡cuidado con los límites del array!)
-	 */
+	return world_1[i][j] == true;
 }
 
-void world_copy(/* Recibo dos mundos */)
+void world_copy(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
 {
-	// TODO: copia el mundo segundo mundo sobre el primero
+	for (int i=0; i<W_SIZE_X; i++)
+	{
+		for (int j=0; j<W_SIZE_Y; j++)
+		{
+			world_1[i][j]=world_2[i][j];
+		}
+	}
 }
