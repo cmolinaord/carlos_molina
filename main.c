@@ -6,8 +6,8 @@
 #define W_SIZE_X 10
 #define W_SIZE_Y 10
 
-void world_init(/* Recibo un mundo */);
-void world_print(/* Recibo un mundo */);
+void world_init(bool world_1[W_SIZE_X][W_SIZE_Y]);
+void world_print(bool world_1[W_SIZE_X][W_SIZE_Y]);
 void world_step(/* Recibo dos mundos */);
 int world_count_neighbors(/* Recibo un mundo y unas coordenadas */);
 bool world_get_cell(/* Recibo un mundo y unas coordenadas */);
@@ -24,7 +24,7 @@ int main()
 
 	do {
 		printf("\033cIteration %d\n", i++);
-		// TODO: Imprime el mundo
+		world_print(world_1);
 		// TODO: Itera
 	} while (getchar() != 'q');
 
@@ -34,9 +34,9 @@ int main()
 void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
 {
 	// Inicializar mundo a fase
-	for (int i; i<W_SIZE_X; i++)
+	for (int i=0; i<W_SIZE_X; i++)
 	{
-		for (int j; j<W_SIZE_Y; j++)
+		for (int j=0; j<W_SIZE_Y; j++)
 		{
 			world_1[i][j]=false;
 		}
@@ -55,21 +55,21 @@ void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
 
 }
 
-void world_print(/* Recibo un mundo */)
+void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
 {
-	// TODO: Imprimir el mundo por consola. Sugerencia:
-	/*
-	 *     . # . . . . . . . .
-	 *     . . # . . . . . . .
-	 *     # # # . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 *     . . . . . . . . . .
-	 */
+	printf("Imprimir\n");
+	// Imprimir mundo
+	for (int i=0; i<W_SIZE_X; i++)
+	{
+		for (int j=0; j<W_SIZE_Y; j++)
+		{
+			if (world_1[i][j])
+				printf("# ");
+			else
+				printf(". ");
+		}
+		printf("\n");
+	}
 }
 
 void world_step(/* Recibo dos mundos */)
