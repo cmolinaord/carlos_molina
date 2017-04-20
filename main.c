@@ -72,9 +72,9 @@ void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
 
 void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
 {
-	for (int i=1; i<W_SIZE_X-1; i++)
+	for (int i=0; i<W_SIZE_X; i++)
 	{
-		for (int j=1; j<W_SIZE_Y-1; j++)
+		for (int j=0; j<W_SIZE_Y; j++)
 		{
 			int neighbors=world_count_neighbors(world_1, i, j);
 			world_2[i][j] = (world_1[i][j] && neighbors == 2) || neighbors == 3;
@@ -100,6 +100,15 @@ int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 
 bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
+	if (i == -1)
+		i += W_SIZE_X;
+	if (i == W_SIZE_X)
+		i -= W_SIZE_X;
+	if (j == -1)
+		j += W_SIZE_Y;
+	if (j == W_SIZE_Y)
+		j -= W_SIZE_Y;
+
 	return world_1[i][j];
 }
 
