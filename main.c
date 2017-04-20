@@ -64,12 +64,9 @@ void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
 	{
 		for (int j=0; j<W_SIZE_Y; j++)
 		{
-			if (world_1[i][j] == true)
-				printf("# ");
-			else
-				printf("· ");
+			printf("%s ", world_get_cell(world_1, i, j) ? "#" : ".");
 		}
-		printf("\n",i);
+		printf("\n");
 	}
 }
 
@@ -80,20 +77,7 @@ void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_
 		for (int j=1; j<W_SIZE_Y-1; j++)
 		{
 			int neighbors=world_count_neighbors(world_1, i, j);
-			if (!world_get_cell(world_1, i, j)) // Si esta muerta
-			{
-				if (neighbors == 3)
-					world_2[i][j]=true;
-				else
-					world_2[i][j]=false;
-			}
-			else // Si esta viva
-			{
-				if (neighbors == 2 || neighbors == 3)
-					world_2[i][j]=true;
-				else
-					world_2[i][j]=false;
-			}
+			world_2[i][j] = (world_1[i][j] && neighbors == 2) || neighbors == 3;
 		}
 	}
 	// Copiar el mundo auxiliar sobre el antiguo
@@ -103,33 +87,25 @@ void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_
 int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
 	int count=0;
-	for (int a=i-1; a<=i+1; a++)
-	{
-		for (int b=j-1; b<=j+1; b++)
-		{
-			if (world_get_cell(world_1, a, b))
-				count++;
-		}
-	}
-	// No contar la propia celda analizada
-	if (world_get_cell(world_1, i, j))
-		count--;
-
+	count += world_get_cell(world_1, i - 1, j - 1);
+	count += world_get_cell(world_1, i - 1, j    );
+	count += world_get_cell(world_1, i - 1, j + 1);
+	count += world_get_cell(world_1, i    , j - 1);
+	count += world_get_cell(world_1, i    , j + 1);
+	count += world_get_cell(world_1, i + 1, j - 1);
+	count += world_get_cell(world_1, i + 1, j    );
+	count += world_get_cell(world_1, i + 1, j + 1);
 	return count;
 }
 
 bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
-	return world_1[i][j] == true;
+	return world_1[i][j];
 }
 
 void world_copy(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
 {
 	for (int i=0; i<W_SIZE_X; i++)
-	{
-		for (int j=0; j<W_SIZE_Y; j++)
-		{
-			world_1[i][j]=world_2[i][j];
-		}
-	}
+			for (int j=0; j<W_SIZE_Y; j++)
+				world_1[i][j]=world_2[i][j];
 }
