@@ -3,8 +3,8 @@
 #include <stdbool.h>
 
 // Define tamanio mundo
-#define W_SIZE_X 20
-#define W_SIZE_Y 20
+#define W_SIZE_X 25
+#define W_SIZE_Y 40
 // Las primeras y ultmas columnas/filas son parte del borde y no juegan
 
 void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
@@ -54,7 +54,13 @@ void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_
 	world_1[3][1]=true;
 	world_1[3][2]=true;
 	world_1[3][3]=true;
-
+/*
+	world_1[4][24]=true;
+	world_1[5][23]=true;
+	world_1[6][23]=true;
+	world_1[6][24]=true;
+	world_1[6][25]=true;
+	*/
 }
 
 void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
@@ -63,9 +69,7 @@ void world_print(bool world_1[W_SIZE_X][W_SIZE_Y])
 	for (int i=0; i<W_SIZE_X; i++)
 	{
 		for (int j=0; j<W_SIZE_Y; j++)
-		{
 			printf("%s ", world_get_cell(world_1, i, j) ? "#" : ".");
-		}
 		printf("\n");
 	}
 }
@@ -102,11 +106,11 @@ bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j)
 {
 	if (i == -1)
 		i += W_SIZE_X;
-	if (i == W_SIZE_X)
+	else if (i == W_SIZE_X)
 		i -= W_SIZE_X;
 	if (j == -1)
 		j += W_SIZE_Y;
-	if (j == W_SIZE_Y)
+	else if (j == W_SIZE_Y)
 		j -= W_SIZE_Y;
 
 	return world_1[i][j];
