@@ -7,7 +7,7 @@
 #define W_SIZE_Y 40
 // Las primeras y ultmas columnas/filas son parte del borde y no juegan
 
-void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
+void world_init(bool world_1[W_SIZE_X][W_SIZE_Y]);
 void world_print(bool world_1[W_SIZE_X][W_SIZE_Y]);
 void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
 int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j);
@@ -21,7 +21,7 @@ int main()
 	bool world_1[W_SIZE_X][W_SIZE_Y];
 	bool world_2[W_SIZE_X][W_SIZE_Y];
 
-	world_init(world_1, world_2);
+	world_init(world_1);
 
 	do {
 		printf("\033cIteration %d\n", i++);
@@ -32,17 +32,12 @@ int main()
 	return EXIT_SUCCESS;
 }
 
-void world_init(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y])
+void world_init(bool world_1[W_SIZE_X][W_SIZE_Y])
 {
 	// Inicializar mundo a fase
 	for (int i=0; i<W_SIZE_X; i++)
-	{
 		for (int j=0; j<W_SIZE_Y; j++)
-		{
 			world_1[i][j]=false;
-			world_2[i][j]=false;
-		}
-	}
 
 	/* Inicializar con el patrón del glider:
 	*           . # .
