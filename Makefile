@@ -1,11 +1,11 @@
 CFLAGS = -Wall -Werror
 
-.PHONY : all clean
+.PHONY : all clean uninstall
 
 all: gameoflife
 
-gameoflife: main.c gameoflife.c
-	gcc main.c gameoflife.c -o gameoflife
+gameoflife: main.o gameoflife.o
+	gcc main.o gameoflife.o -o gameoflife
 
 main.o: main.c gameoflife.h
 	gcc -c main.c
