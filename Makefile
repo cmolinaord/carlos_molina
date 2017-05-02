@@ -1,5 +1,4 @@
 CFLAGS = -Wall -Werror
-
 .PHONY : all clean uninstall
 
 all: gameoflife
