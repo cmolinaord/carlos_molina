@@ -10,11 +10,16 @@
 #define W_SIZE_Y 40
 // Las primeras y ultmas columnas/filas son parte del borde y no juegan
 
-void world_init(bool world_1[W_SIZE_X][W_SIZE_Y]);
-void world_print(bool world_1[W_SIZE_X][W_SIZE_Y]);
-void world_step(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
-int world_count_neighbors(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j);
-bool world_get_cell(bool world_1[W_SIZE_X][W_SIZE_Y], int i, int j);
-void world_copy(bool world_1[W_SIZE_X][W_SIZE_Y], bool world_2[W_SIZE_X][W_SIZE_Y]);
+struct world {
+	bool now[W_SIZE_X][W_SIZE_Y];
+	bool next[W_SIZE_X][W_SIZE_Y];
+};
+
+void world_init(struct world *w);
+void world_print(const struct world *w);
+void world_step(struct world *w);
+int world_count_neighbors(const struct world *w, int i, int j);
+bool world_get_cell(const struct world *w, int i, int j);
+void world_copy(struct world *w);
 
 #endif

@@ -3,20 +3,18 @@
 #include <stdbool.h>
 #include "gameoflife.h"
 
-
 int main()
 {
 	int i = 0;
 
-	bool world_1[W_SIZE_X][W_SIZE_Y];
-	bool world_2[W_SIZE_X][W_SIZE_Y];
+	struct world w;
 
-	world_init(world_1);
+	world_init(&w);
 
 	do {
 		printf("\033cIteration %d\n", i++);
-		world_print(world_1);
-		world_step(world_1, world_2);
+		world_print(&w);
+		world_step(&w);
 	} while (getchar() != 'q');
 
 	return EXIT_SUCCESS;
