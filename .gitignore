@@ -1,2 +1,4 @@
 gameoflife
+gameoflife.dbg
 *.o
+*.swp

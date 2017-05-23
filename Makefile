@@ -1,5 +1,5 @@
 CFLAGS = -Wall -Werror
-.PHONY : all clean uninstall
+.PHONY : all debug clean uninstall
 
 all: gameoflife
 
@@ -12,8 +12,13 @@ main.o: main.c gameoflife.h
 gameoflife.o: gameoflife.c gameoflife.h
 	gcc -c gameoflife.c
 
+debug:
+	gcc -B -g -c main.c
+	gcc -B -g -c gameoflife.c
+	gcc -B -g main.o gameoflife.o -o gameoflife.dbg
+	echo "...q" | valgrind --leak-check=full ./gameoflife.dbg
 clean:
-	rm *.o *.gch
+	rm -v *.o *.gch
 
 uninstall:
-	rm gameoflife
+	rm -v gameoflife gameoflife.dbg
