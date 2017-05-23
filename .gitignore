@@ -2,3 +2,4 @@ gameoflife
 gameoflife.dbg
 *.o
 *.swp
+cfg_template*
