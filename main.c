@@ -6,12 +6,15 @@
 int main()
 {
 	int i = 0;
-	struct world w;
-	world_init(&w);
+	int size_x = 14;
+	int size_y = 14;
+
+	struct world *w;
+	w = world_alloc(size_x, size_y);
 	do {
 		printf("\033cIteration %d\n", i++);
-		world_print(&w);
-		world_step(&w);
+		world_print(w);
+		world_iterate(w);
 	} while (getchar() != 'q');
 	return EXIT_SUCCESS;
 }
