@@ -16,5 +16,7 @@ int main()
 		world_print(w);
 		world_iterate(w);
 	} while (getchar() != 'q');
+	world_free(w);
+
 	return EXIT_SUCCESS;
 }
