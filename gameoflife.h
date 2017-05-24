@@ -7,7 +7,7 @@
 
 struct world;
 
-struct world *world_alloc(int size_x, int size_y);
+struct world *world_alloc(int nrows, int ncols);
 void world_free(struct world *w);
 
 void world_print(const struct world *w);

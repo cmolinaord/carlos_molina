@@ -6,11 +6,11 @@
 int main()
 {
 	int i = 0;
-	int size_x = 14;
-	int size_y = 14;
+	int nrows = 14;
+	int ncols = 14;
 
 	struct world *w;
-	w = world_alloc(size_x, size_y);
+	w = world_alloc(nrows, ncols);
 	do {
 		printf("\033cIteration %d\n", i++);
 		world_print(w);

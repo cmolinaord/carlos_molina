@@ -6,8 +6,8 @@
 struct world
 {
 	bool *cells[2];
-	int size_x;
-	int size_y;
+	int nrows;
+	int ncols;
 };
 
 static void fix_coords(const struct world *w, int *x, int *y);
@@ -17,7 +17,7 @@ static int count_neighbors(const struct world *w, int x, int y);
 static void init_pattern(struct world *w);
 
 
-struct world *world_alloc(int size_x, int size_y)
+struct world *world_alloc(int nrows, int ncols)
 {
 	struct world *w;
 	bool *w0,*w1;
@@ -26,12 +26,12 @@ struct world *world_alloc(int size_x, int size_y)
 	if (!w)
 		return NULL;
 
-	w0 = (bool *)malloc(size_x * size_y * sizeof(bool));
+	w0 = (bool *)malloc(nrows * ncols * sizeof(bool));
 	if (!w0) {
 		free(w);
 		return NULL;
 	}
-	w1 = (bool *)malloc(size_x * size_y * sizeof(bool));
+	w1 = (bool *)malloc(nrows * ncols * sizeof(bool));
 	if (!w1) {
 		free(w);
 		free(w0);
@@ -40,8 +40,8 @@ struct world *world_alloc(int size_x, int size_y)
 
 	w->cells[0] = w0;
 	w->cells[1] = w1;
-	w->size_x   = size_x;
-	w->size_y   = size_y;
+	w->nrows   = nrows;
+	w->ncols   = ncols;
 
 	init_pattern(w);
 	return w;
@@ -49,8 +49,8 @@ struct world *world_alloc(int size_x, int size_y)
 
 static void init_pattern(struct world *w)
 {
-	for (int i = 0; i < w->size_x; i++)
-		for (int j = 0; j < w->size_y; j++) {
+	for (int i = 0; i < w->nrows; i++)
+		for (int j = 0; j < w->ncols; j++) {
 			set_cell(w, 0, i, j, false);
 		}
 	set_cell(w, 0, 1, 2, true);
@@ -70,11 +70,8 @@ void world_free(struct world *w)
 void world_print(const struct world *w)
 {
 	//Print the world stored in cells[0]
-	int size_x = w->size_x;
-	int size_y = w->size_y;
-
-	for (int i = 0; i < size_x; i++) {
-		for (int j = 0; j < size_y; j++)
+	for (int i = 0; i < w->nrows; i++) {
+		for (int j = 0; j < w->ncols; j++)
 			printf("%s ", get_cell(w, i, j) ? "#" : ".");
 		printf("\n");
 	}
@@ -82,11 +79,8 @@ void world_print(const struct world *w)
 
 void world_iterate(struct world *w)
 {
-	int size_x = w->size_x;
-	int size_y = w->size_y;
-
-	for (int i = 0; i < size_x; i++) {
-		for (int j = 0; j < size_y; j++) {
+	for (int i = 0; i < w->nrows; i++) {
+		for (int j = 0; j < w->ncols; j++) {
 			int neighbors = count_neighbors(w, i, j);
 			bool next = (get_cell(w, i, j) && neighbors == 2) || neighbors == 3;
 			//set cells in world[1]
@@ -115,28 +109,25 @@ int count_neighbors(const struct world *w, int x, int y)
 
 static void fix_coords(const struct world *w, int *x, int *y)
 {
-	int size_x = w->size_x;
-	int size_y = w->size_y;
-
 	if (*x == -1)
-		*x += size_x;
-	else if (*x == size_x)
-		*x -= size_x;
+		*x += w->nrows;
+	else if (*x == w->nrows)
+		*x -= w->nrows;
 	if (*y == -1)
-		*y += size_y;
-	else if (*y == size_y)
-		*y -= size_y;
+		*y += w->ncols;
+	else if (*y == w->ncols)
+		*y -= w->ncols;
 }
 
 
 static bool get_cell(const struct world *w, int x, int y)
 {
 	fix_coords(w, &x, &y);
-	return w->cells[0][x * w->size_y + y];
+	return w->cells[0][x * w->ncols + y];
 }
 
 static void set_cell(struct world *w, int buf, int x, int y, bool val)
 {
-	int offset = x * w->size_y + y;
+	int offset = x * w->ncols + y;
 	*(w->cells[buf] + offset) = val;
 }
