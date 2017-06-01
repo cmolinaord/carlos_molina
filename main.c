@@ -1,16 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
+#include "config.h"
 #include "gameoflife.h"
 
-int main()
+int main(int argc, char *argv[])
 {
 	int i = 0;
-	int nrows = 14;
-	int ncols = 14;
 
+	struct config cfg;
 	struct world *w;
-	w = world_alloc(nrows, ncols);
+
+	if (!config_parse_argv(&cfg, argc, argv)) {
+		printf("ERROR: bad input\n");
+		config_print_usage(argv[0]);
+		return EXIT_FAILURE;
+	}
+	else if (cfg.show_help) {
+		config_print_usage(argv[0]);
+		return EXIT_SUCCESS;
+	}
+
+	w = world_alloc(&cfg);
+	if (!w) {
+		perror("Cannot allocate world");
+		exit(EXIT_FAILURE);
+	}
+
 	do {
 		printf("\033cIteration %d\n", i++);
 		world_print(w);

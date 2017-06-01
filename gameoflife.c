@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "gameoflife.h"
+#include "config.h"
+
 
 struct world
 {
@@ -17,10 +19,13 @@ static int count_neighbors(const struct world *w, int x, int y);
 static void init_pattern(struct world *w);
 
 
-struct world *world_alloc(int nrows, int ncols)
+struct world *world_alloc(struct config *cfg)
 {
 	struct world *w;
 	bool *w0,*w1;
+
+	int ncols = cfg->ncols;
+	int nrows = cfg->nrows;
 
 	w = (struct world *)malloc(sizeof(struct world));
 	if (!w)
