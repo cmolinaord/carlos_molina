@@ -5,9 +5,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "config.h"
+
 struct world;
 
-struct world *world_alloc(int size_x, int size_y);
+struct world *world_alloc(struct config *cfg);
 void world_free(struct world *w);
 
 void world_print(const struct world *w);
