@@ -1,7 +1,10 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#include <stdio.h>
 #include <stdbool.h>
+
+#define BUF_SIZE 60
 
 enum cfg_init_mode {
 	CFG_NOT_DEF = -1,
@@ -17,6 +20,7 @@ struct config {
 	int nrows;
 	int ncols;
 	enum cfg_init_mode init_mode;
+	char *file;
 };
 
 int config_parse_argv(struct config *config, int argc, char *argv[]);

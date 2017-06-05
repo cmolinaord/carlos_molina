@@ -23,6 +23,7 @@ static const struct option long_options[] =
 
 static bool check_config(const struct config *config);
 static enum cfg_init_mode str2init_mode(const char *opt);
+static bool load_config(struct config *config);
 
 int config_parse_argv(struct config *config, int argc, char *argv[])
 {
@@ -34,6 +35,7 @@ int config_parse_argv(struct config *config, int argc, char *argv[])
 	config->nrows     = 20;
 	config->ncols     = 20;
 	config->init_mode = CFG_DEFAULT;
+	config->file	  = NULL;
 
 	while ((c = getopt_long(argc, argv, "hR:C:i:", long_options,
 				&option_index)) != -1) {
@@ -50,10 +52,24 @@ int config_parse_argv(struct config *config, int argc, char *argv[])
 			break;
 		case 'i':
 			config->init_mode = str2init_mode(optarg);
+			break;
 		case '?':
-			printf("\nERROR: unknown option %s \n", optopt);
+			printf("\nERROR: unknown option %s \n", optarg);
+			return false;
+			break;
 		}
 	}
+
+	if (optind != argc) {
+		if (optind == argc - 1) {
+			config->file = argv[optind];
+			if (!load_config(config))
+				return false;
+		} else {
+			return false;
+		}
+	}
+
 	return check_config(config);
 }
 
@@ -70,6 +86,33 @@ static bool check_config(const struct config *config)
 	correct &= config->init_mode > -1;
 
 	return correct;
+}
+
+static bool load_config(struct config *config)
+{
+	FILE *file = fopen(config->file, "r");
+	if (!file) {
+		perror("Error al abrir el archivo ");
+		return false;
+	}
+
+	// nrows
+	char buf[BUF_SIZE];
+	fgets(buf, BUF_SIZE, file);
+	config->nrows = strtol(buf, NULL, 10);
+
+	//ncols
+	fgets(buf, BUF_SIZE, file);
+	config->nrows = strtol(buf, NULL, 10);
+
+	//mode
+	fgets(buf, BUF_SIZE, file);
+	char *line_end = strchr(buf, '\n' );
+		if (line_end)
+			*line_end = '\0';
+	config->init_mode = str2init_mode(buf);
+
+	return true;
 }
 
 static enum cfg_init_mode str2init_mode(const char *opt)
