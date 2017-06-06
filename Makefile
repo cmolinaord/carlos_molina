@@ -16,10 +16,10 @@ gameoflife.o: gameoflife.c gameoflife.h
 	gcc -c gameoflife.c
 
 debug:
-	gcc -B -g -c main.c
-	gcc -B -g -c gameoflife.c
-	gcc -B -g -c config.c
-	gcc -B -g main.o gameoflife.o config.o -o gameoflife.dbg
+	gcc -g -c main.c
+	gcc -g -c gameoflife.c
+	gcc -g -c config.c
+	gcc -g main.o gameoflife.o config.o -o gameoflife.dbg
 
 clean:
 	rm -v *.o *.gch
