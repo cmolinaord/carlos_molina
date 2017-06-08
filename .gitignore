@@ -1,5 +1,6 @@
 gameoflife
 gameoflife.dbg
+*.h.gch
 *.o
 *.swp
 templates
