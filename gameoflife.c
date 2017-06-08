@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include "gameoflife.h"
 #include "config.h"
 
@@ -71,6 +72,8 @@ static void init_pattern(struct world *w, int mode)
 
 	//random
 	else if (mode == 2) {
+		time_t t;
+		srand((unsigned) time(&t));
 		for (int i = 0; i < w->nrows; i++)
 			for (int j = 0; j < w->ncols; j++)
 				set_cell(w, 0, i, j, rand() & 1);
