@@ -4,7 +4,6 @@
 #include <string.h>
 #include <time.h>
 #include "gameoflife.h"
-#include "config.h"
 
 
 struct world
