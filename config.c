@@ -101,7 +101,7 @@ static bool load_config(struct config *config)
 
 	//ncols
 	fgets(buf, BUF_SIZE, file);
-	config->nrows = strtol(buf, NULL, 10);
+	config->ncols = strtol(buf, NULL, 10);
 
 	//mode
 	fgets(buf, BUF_SIZE, file);
