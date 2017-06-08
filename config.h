@@ -13,7 +13,7 @@ enum cfg_init_mode {
 	CFG_RANDOM,
 	_CFG_MAX_,
 };
-#define CFG_N_INIT_MODES (_CFG_MAX_ - 1)
+#define CFG_N_INIT_MODES (_CFG_MAX_)
 
 struct config {
 	bool show_help;

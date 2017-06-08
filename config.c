@@ -1,15 +1,13 @@
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <getopt.h>
-
+#include "config.h"
 
 static const char *init_mode_str[] = {
 	[CFG_DEFAULT] = "default",
 	[CFG_GLIDER]  = "glider",
-	[CFG_RANDOM]  = "random",
+	[CFG_RANDOM]  = "random"
 };
 
 static const struct option long_options[] =
@@ -146,7 +144,7 @@ void config_print(const struct config *config)
 	printf("\tshow help = %s\n", config->show_help ? "YES" : "NO");
 	printf("\tsize_x    = %d\n", config->nrows);
 	printf("\tsize_y    = %d\n", config->ncols);
-	printf("\tinit_mode = %d(%s)\n",
+	printf("\tinit_mode = %d (%s)\n",
 		config->init_mode, init_mode_str[config->init_mode]);
 	printf("}\n");
 }

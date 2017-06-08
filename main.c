@@ -35,5 +35,8 @@ int main(int argc, char *argv[])
 	} while (getchar() != 'q');
 	world_free(w);
 
+	// Print config that has been used (for debbug)
+	config_print(&cfg);
+	
 	return EXIT_SUCCESS;
 }

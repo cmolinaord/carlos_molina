@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "gameoflife.h"
 #include "config.h"
 
@@ -16,7 +17,7 @@ static void fix_coords(const struct world *w, int *x, int *y);
 static bool get_cell(const struct world *w, int x, int y);
 static void set_cell(struct world *w, int buf, int x, int y, bool val);
 static int count_neighbors(const struct world *w, int x, int y);
-static void init_pattern(struct world *w);
+static void init_pattern(struct world *w, int mode);
 
 
 struct world *world_alloc(struct config *cfg)
@@ -26,6 +27,7 @@ struct world *world_alloc(struct config *cfg)
 
 	int ncols = cfg->ncols;
 	int nrows = cfg->nrows;
+	int mode = cfg->init_mode;
 
 	w = (struct world *)malloc(sizeof(struct world));
 	if (!w)
@@ -48,21 +50,31 @@ struct world *world_alloc(struct config *cfg)
 	w->nrows   = nrows;
 	w->ncols   = ncols;
 
-	init_pattern(w);
+	init_pattern(w, mode);
 	return w;
 }
 
-static void init_pattern(struct world *w)
+static void init_pattern(struct world *w, int mode)
 {
 	for (int i = 0; i < w->nrows; i++)
-		for (int j = 0; j < w->ncols; j++) {
+		for (int j = 0; j < w->ncols; j++)
 			set_cell(w, 0, i, j, false);
-		}
-	set_cell(w, 0, 1, 2, true);
-	set_cell(w, 0, 2, 3, true);
-	set_cell(w, 0, 3, 1, true);
-	set_cell(w, 0, 3, 2, true);
-	set_cell(w, 0, 3, 3, true);
+
+	// default || glider
+	if (mode == 0 || mode == 1) {
+		set_cell(w, 0, 1, 2, true);
+		set_cell(w, 0, 2, 3, true);
+		set_cell(w, 0, 3, 1, true);
+		set_cell(w, 0, 3, 2, true);
+		set_cell(w, 0, 3, 3, true);
+	}
+
+	//random
+	else if (mode == 2) {
+		for (int i = 0; i < w->nrows; i++)
+			for (int j = 0; j < w->ncols; j++)
+				set_cell(w, 0, i, j, rand() & 1);
+	}
 }
 
 void world_free(struct world *w)
