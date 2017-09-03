@@ -91,7 +91,8 @@ void world_print(const struct world *w)
 	//Print the world stored in cells[0]
 	for (int i = 0; i < w->nrows; i++) {
 		for (int j = 0; j < w->ncols; j++)
-			printf("%s ", get_cell(w, i, j) ? "#" : ".");
+			printf("%s ", get_cell(w, i, j) ? COLOR_GREEN "o" COLOR_RESET
+			: COLOR_RED "x" COLOR_RESET);
 		printf("\n");
 	}
 }
